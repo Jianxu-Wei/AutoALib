@@ -1,0 +1,33 @@
+# Entity : 2add_1mul_tree
+source(start_node) {
+	targets in1, in2, in3, in4;
+}
+
+# Input declaration (4 Inputs for the 2 Adders)
+input(in1) { bitwidth 32; signed 1; }
+input(in2) { bitwidth 32; signed 1; }
+input(in3) { bitwidth 32; signed 1; }
+input(in4) { bitwidth 32; signed 1; }
+
+# Output declaration
+output(y) {
+	bitwidth 32;
+	signed 1;
+}
+
+# Variable declaration (Intermediate sums)
+temporary(add1_out) { bitwidth 32; signed 1; }
+temporary(add2_out) { bitwidth 32; signed 1; }
+
+# --- Operations ---
+
+# Layer 1: Two Adders
+operation(op0) { function add; read in1, in2; write add1_out; }
+operation(op1) { function add; read in3, in4; write add2_out; }
+
+# Layer 2: One Multiplier
+operation(op2) { function mul; read add1_out, add2_out; write y; }
+
+sink(end_node) {
+	targets y;
+}

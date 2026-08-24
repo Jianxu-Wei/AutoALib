@@ -1,0 +1,10 @@
+# Entity : 2mul_to add tree
+source(start_node) { targets in1, in2, in3, in4; }
+input(in1, in2, in3, in4) { bitwidth 32; signed 1; }
+output(y) { bitwidth 32; signed 1; }
+
+operation(op0) { function mul; read in1, in2; write t1; }
+operation(op1) { function mul; read in3, in4; write t2; }
+operation(op2) { function add; read t1, t2; write y; }
+
+sink(end_node) { targets y; }
