@@ -29,41 +29,29 @@ AutoALib follows six main steps:
 5. **Evolve the population.** Higher-fitness candidates are selected, recombined, and mutated to explore new AxLib compositions.
 6. **Return the target AxLib.** After the maximum number of generations, the highest-fitness candidate is decoded into the final adder and multiplier library.
 
-### Fitness Function in the Paper
+### Fitness Function
 
-For a configuration $c$ under DFG $D_j$, the paper defines its quality as
+For a configuration $c$ under DFG $D_j$, the implementation computes its quality as
 
 ```math
-R_j(c) = \frac{\operatorname{Save}_j(c)}{\operatorname{Error}_j(c) + \epsilon}
+R_j(c) = 100 \times \frac{w_A s_A(c) + w_P s_P(c)}{\max(e_j(c), 0.001)}
 ```
 
-The quality of candidate library $L$ under $D_j$ is the average quality of all feasible configurations $C_j(L)$:
+where $s_A(c)$ and $s_P(c)$ are the fractional area and power savings, respectively. The default settings are $w_A = 1$ and $w_P = 0$, so only area saving contributes to the score.
+
+The quality of candidate library $L$ under DFG $D_j$ is the average quality of all configurations in $C_j(L)$:
 
 ```math
 Q_j(L) = \frac{1}{|C_j(L)|}\sum_{c \in C_j(L)} R_j(c)
 ```
 
-The final fitness is the geometric mean over the six DFGs:
+The final fitness is calculated across the six DFGs as
 
 ```math
-Q(L) = \left(\prod_{j=1}^{6} Q_j(L)\right)^{1/6}
+Q(L) = \exp\left(\frac{1}{6}\sum_{j=1}^{6}\log\left(Q_j(L)+10^{-9}\right)\right)
 ```
 
-### Fitness Function in the Current Code
-
-The current implementation uses the following per-configuration score:
-
-```math
-R_{\mathrm{impl}} = 100 \times \frac{w_A s_A + w_P s_P}{\max(e_{\mathrm{CDFG}}, 0.001)}
-```
-
-where $s_A$ and $s_P$ are the fractional area and power savings. With the default settings, $w_A = 1$ and $w_P = 0$, so only area saving contributes to this score. The DFG-level scores are averaged and then combined as
-
-```math
-Q_{\mathrm{impl}}(L) = \exp\left(\frac{1}{6}\sum_{j=1}^{6}\log\left(Q_j(L)+10^{-9}\right)\right)
-```
-
-Therefore, the equations in the paper and the equations used by the current code are presented separately here. Although `EPSILON = 1e-5` is defined in [`GAmedcomputing.py`](GAmedcomputing.py), the current code uses `0.001` as the effective error floor.
+Although `EPSILON = 1e-5` is defined in [`GAmedcomputing.py`](GAmedcomputing.py), it is not used in the current calculation. The effective error floor is `0.001`.
 
 ## Repository Structure
 
@@ -114,7 +102,7 @@ The default evaluation uses 100,000 random vectors for every approximate configu
 
 The current source snapshot includes one exact level (Level 0) and three active approximate levels for both adders and multipliers. The exact unit in Level 0 is fixed because it is the only candidate in that subset.
 
-The active DFG list is configured in `CDFG_FILES` in [`GAmedcomputing.py`](GAmedcomputing.py). The default list contains six three-node structures corresponding to the representative addition/multiplication patterns described in the paper.
+The active DFG list is configured in `CDFG_FILES` in [`GAmedcomputing.py`](GAmedcomputing.py). The default list contains six three-node addition/multiplication structures used for library fitness evaluation.
 
 ## Using a Different Approximate Unit Pool
 
