@@ -29,7 +29,7 @@ AutoALib follows six main steps:
 5. **Evolve the population.** Higher-fitness candidates are selected, recombined, and mutated to explore new AxLib compositions.
 6. **Return the target AxLib.** After the maximum number of generations, the highest-fitness candidate is decoded into the final adder and multiplier library.
 
-For a configuration $c$ under DFG $D_j$, the paper defines its quality as
+For a configuration $c$ under DFG $D_j$, defines its quality as
 
 $$
 R_j(c) = \frac{\operatorname{Save}_j(c)}{\operatorname{Error}_j(c) + \epsilon}.
