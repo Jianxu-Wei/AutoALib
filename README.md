@@ -93,11 +93,8 @@ The default evaluation uses 100,000 random vectors for every approximate configu
 | Crossover | Separate single-point crossover for multiplier and adder chromosomes | `GAcross.py` |
 | Mutation probability | 0.3 per individual | `main.py`, `GAmutation.py` |
 | Monte Carlo vectors | 100,000 per configuration | `GAmedcomputing.py` |
-| Random input range | 0 to 127 | `GAmedcomputing.py` |
-| Area weight | 1 | `GAmedcomputing.py` |
-| Power weight | 0 | `GAmedcomputing.py` |
 | Error floor used by the implementation | 0.001 | `GAmedcomputing.py` |
-| Random seed | Not fixed | - |
+
 
 The current source snapshot includes one exact level (Level 0) and three active approximate levels for both adders and multipliers. The exact unit in Level 0 is fixed because it is the only candidate in that subset.
 
@@ -118,65 +115,6 @@ The active DFG list is configured in `CDFG_FILES` in [`GAmedcomputing.py`](GAmed
 
 To use a different error metric or benchmark structure, update the simulation and fitness logic in [`GAmedcomputing.py`](GAmedcomputing.py) and modify the active DFG list. AutoALib is not restricted to mean error distance (MED), provided that the selected metric can be computed for each configuration.
 
-## Results Reported in the Paper
-
-The paper evaluates AutoALib with two representative ADSE frameworks:
-
-- **ENAP**, a heuristic genetic-search framework.
-- **FPAX**, a neural-network-based framework that uses transfer learning.
-
-Four benchmark applications are evaluated under multiple MED constraints: FIR, 3x3 convolution, Sobel, and DCT. The original search algorithms and settings of ENAP and FPAX are retained; only the AxLib is replaced.
-
-The reported results show that:
-
-- AxLibs with higher $Q(L)$ values consistently enable more favorable candidate configuration spaces.
-- AutoALib improves the final ADSE area-saving results in both ENAP and FPAX.
-- The maximum reported improvement in area saving is approximately **62%**, obtained for 3x3 convolution under `MED < 15` with FPAX.
-- The maximum reported improvement in cost effectiveness, measured as area saving per unit of MED, is approximately **91%**, obtained for FIR under `MED < 10` with FPAX.
-
-These values are the experimental results reported in the accompanying paper. Reproduction requires the corresponding ENAP/FPAX flows, application inputs, synthesis setup, and error constraints in addition to the core AutoALib implementation in this repository.
-
-## Troubleshooting
-
-### No approximate units are loaded
-
-Run the program from the repository root and confirm that `approlib/*.so` exists. If the supplied shared libraries are incompatible with the current Linux distribution or processor architecture, rebuild them from the corresponding C sources.
-
-### `cannot open shared object file`
-
-Check the current working directory and the `.so` architecture. The precompiled libraries are intended for Linux x86-64 and cannot normally be loaded directly on Windows.
-
-### Results change between runs
-
-The current implementation does not set a random seed. Add a fixed `random.seed(...)` before population initialization and error simulation when deterministic repetition is required.
-
-## Citation
-
-If AutoALib is useful in your work, please cite the accompanying manuscript:
-
-```bibtex
-@article{dou2026autoalib,
-  author  = {Yuqin Dou and Jianxu Wei and Heyang Yao and Jiang Li and Xiaojuan Lian and Yijun Cui and Weiqiang Liu},
-  title   = {AutoALib: Automatic Construction of High-Quality Approximate Unit Libraries for Approximate Design Space Exploration},
-  year    = {2026},
-  note    = {Manuscript}
-}
-```
-
-Please replace the manuscript metadata above with the final journal, volume, pages, and DOI after publication.
-
-## Third-Party Units and Attribution
-
-The approximate arithmetic units in `approlib/` are derived from EvoApproxLib. Their C source files retain the original license notices and citation information. If these units are used in research, please also cite:
-
-> V. Mrazek, L. Sekanina, and Z. Vasicek, "Libraries of Approximate Circuits: Automated Design and Application in CNN Accelerators," *IEEE Journal on Emerging and Selected Topics in Circuits and Systems*, vol. 10, no. 4, pp. 406-418, 2020.
-
-This repository currently does not contain a separate top-level `LICENSE` file. Review the notices in the included third-party source files and add an appropriate project-level license before redistribution.
-
-## Related Work
-
-- Y. Dou, C. Wang, R. Woods, and W. Liu, "ENAP: An Efficient Number-Aware Pruning Framework for Design Space Exploration of Approximate Configurations," *IEEE Transactions on Circuits and Systems I: Regular Papers*, 2023.
-- Y. Dou, C. Wang, H. Waris, R. Woods, and W. Liu, "FPAX: A Fast Prior Knowledge-Based Framework for DSE in Approximate Configurations," *IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems*, 2023.
 
 ## Contact
 
