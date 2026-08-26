@@ -8,7 +8,7 @@ class RegMatch(object):
         self.json_body = []
 
     def load_txt(self):
-        with open("applications/sobel.cdfg", "r") as f:
+        with open("applications/tree.cdfg", "r") as f:
             self.data = f.read()
 
     def format_data(self):
