@@ -1,4 +1,4 @@
-# AutoALib1
+# AutoALib
 
 **Automatic Construction of High-Quality Approximate Unit Libraries for Approximate Design Space Exploration**
 
